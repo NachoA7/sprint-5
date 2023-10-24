@@ -1,2 +1,0 @@
-class MaxCajaAhorro(Exception):
-    pass
