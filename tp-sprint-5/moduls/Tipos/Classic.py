@@ -1,32 +1,36 @@
 from exceptions.MaxCajaAhorro import MaxCajaAhorro
+from moduls.Clientes import Clientes
 
-class Classic:
-    def __init__(self, caja_ahorro_dolares = False) -> None:
-        self.cant_cajas = 1
-        self.cant_tarjetas = 1
-        self.limite_retiros = 5
-        self.limite_extraccion = 10000
-        self.__tarjeta_visa = [00000000000000,1]
-        self.__tarjeta_masterCard = [00000000000000,1]
-        self.__cajas_de_ahorro = [["Caja de ahorro en pesos 1", 1, 0]]
-        self.__retiros_en_efectivo = {"Cajero 1": [0, 10000], "Cajero 2": [0, 10000]}
-        self.__comisiones = {"Salientes": 0.1, "Entrantes": 0.05}
-        if caja_ahorro_dolares:
-            self.__cajas_de_ahorro.append([f"Caja de ahorro {len(self.__cajas_de_ahorro) + 1} en dolares", len(self.__cajas_de_ahorro) + 1, 0])
+class Classic(Clientes):
+    def __init__(self,nombre,apellido,tipo, caja_ahorro_dolares = False) -> None:
+        super().__init__(nombre,apellido,tipo)
 
-    def getCaja(self):
-        return self.__cajas_de_ahorro
+        self.cant_tarjetas_debito = 1
+        self.cant_cajas_ahorro = 1
+        self.cant_cajas_ahorro_dolares = 1
+        self.cant_cajas_ahorro_pesos = 1
+        self.cant_retiros = 5
+        self.cant_retiro = 10000
+        self.comisiones_entrantes = 0.05
+        self.comisiones_salientes = 0.1
+        self.tarjetas = []
+
+        # if caja_ahorro_dolares:
+        #     self.__cajas_de_ahorro.append([f"Caja de ahorro {len(self.__cajas_de_ahorro) + 1} en dolares", len(self.__cajas_de_ahorro) + 1, 0])
+
+    # def getCaja(self):
+    #     return self.__cajas_de_ahorro
     
-    def agregarCaja(self):
-        try:
-            if len(self.__cajas_de_ahorro) <= 1:
-                self.__cajas_de_ahorro.append([f"Caja de ahorro {len(self.__cajas_de_ahorro) + 1} en pesos", len(self.__cajas_de_ahorro) + 1, 0])
-            else:
-                raise MaxCajaAhorro("No se puede agregar mas cajas de ahorro")
-        except MaxCajaAhorro as e:
-            print("Error: ", str(e))
+    # def agregarCaja(self):
+    #     try:
+    #         if len(self.__cajas_de_ahorro) <= 1:
+    #             self.__cajas_de_ahorro.append([f"Caja de ahorro {len(self.__cajas_de_ahorro) + 1} en pesos", len(self.__cajas_de_ahorro) + 1, 0])
+    #         else:
+    #             raise MaxCajaAhorro("No se puede agregar mas cajas de ahorro")
+    #     except MaxCajaAhorro as e:
+    #         print("Error: ", str(e))
 
-    def eliminarCaja(self):
-        if len(self.__cajas_de_ahorro)==1:
-            self.__cajas_de_ahorro.remove()
+    # def eliminarCaja(self):
+    #     if len(self.__cajas_de_ahorro)==1:
+    #         self.__cajas_de_ahorro.remove()
         
