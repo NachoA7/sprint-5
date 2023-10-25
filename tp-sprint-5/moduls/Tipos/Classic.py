@@ -1,4 +1,3 @@
-from exceptions.MaxCajaAhorro import MaxCajaAhorro
 from moduls.Clientes import Clientes
 
 class Classic(Clientes):
