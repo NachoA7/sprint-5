@@ -1,9 +1,19 @@
+import datetime
+
 class Clientes:
-    def  __init__(self,nombre,apellido,tipo) -> None:
+    def  __init__(self,nombre,apellido,numero,dni,tipo_cliente) -> None:
         
         self.nombre = nombre
         self.apellido = apellido
-        self.tipo = tipo
+        self.numero = numero
+        self.dni = dni
+        self.tipo_cliente = tipo_cliente
+        self.estado = ["Aceptado","Rechazado","Pendiente"]
+        self.numero_transaccion = 0
+        self.monto = 0
+        self.fecha_actual = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        self.fecha_anterior = 0
+
         self.cant_tarjetas_debito = 0
         self.cant_tarjetas_credito = 0
         self.cant_cajas_ahorro = 0
@@ -23,6 +33,16 @@ class Clientes:
         self.cant_chequeras = 0
         self.tarjetas = ["VISA","MasterCard","American"]
 
+        self.transacciones = {
+            "numero":f"{self.numero}",
+            "nombre": f"{self.nombre}", 
+            "apellido": f"{self.apellido}", 
+            "dni": f"{self.dni}", 
+            "tipo": f"{str(self.tipo_cliente).upper()}", 
+
+            "transacciones":[
+            ]}
+
         self.tarjetas_credito = [["Número",self.apellido,self.nombre,"monto","clave"]]
         self.tarjetas_debito = [["Número",self.apellido,self.nombre,"monto","tipo de tarjeta","clave"]]
         self.cajas_ahorro = [["Nombre de Caja","nro","monto","moneda"]]
@@ -32,6 +52,7 @@ class Clientes:
         self.cuenta_corriente = [["Cuenta Corriente","Numero de cuenta corriente"]]
         self.cuentas_de_inversion = [["Nombre de cuenta","monto"]]
         self.chequera = [["Nro de transaccion","motivo","monto a pagar"]]
+
 
 
     def agregarCaja(self,monto,moneda):
@@ -45,3 +66,58 @@ class Clientes:
         
     def get_cajas(self):
         return self.cajas_ahorro
+    
+    def get_transacciones(self):
+        return self.transacciones
+    
+    def RETIRO_EFECTIVO_CAJERO_AUTOMATICO (self):
+        if (self.cant_retiro>self.monto):
+            i=0
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO", 
+            "cuentaNumero": 1, 
+            "permitidoActualParaTransccion" : self.cant_retiro , 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_retiro -= self.monto
+    #Agus
+    def RETIRO_EFECTIVO_POR_CAJA (self):
+        pass
+    def COMPRA_EN_CUOTAS_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        pass 
+    def COMPRA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        pass 
+    def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        pass
+    #Para el que tenga tiempo
+    def ALTA_TARJETA_DEBITO(self):
+        pass 
+    #Seba
+    def ALTA_CHEQUERA (self):
+        pass 
+    def ALTA_CUENTA_CTE_(self,tipo_moneda):
+        pass 
+    def ALTA_CAJA_DE_AHORRO_(tipo_moneda):
+        pass 
+    def ALTA_CUENTA_DE_INVERSION(self):
+        pass 
+    #Nacho
+    def COMPRA_DOLAR(self):
+        pass 
+    def VENTA_DOLAR(self):
+        pass
+    def TRANSFERENCIA_ENVIADA_(self,tipo_moneda):
+        pass 
+    def TRANSFERENCIA_RECIBIDA_(self,tipo_moneda):
+        pass

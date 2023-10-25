@@ -2,8 +2,8 @@ from exceptions.MaxCajaAhorro import MaxCajaAhorro
 from moduls.Clientes import Clientes
 
 class Black(Clientes):
-    def __init__(self,nombre,apellido,tipo,caja_ahorro_dolares = False) -> None:
-        super().__init__(nombre,apellido,tipo)
+    def __init__(self,nombre,apellido,numero,dni,tipo_cliente,caja_ahorro_dolares = False) -> None:
+        super().__init__(nombre,apellido,tipo_cliente,numero,dni)
 
         self.cant_tarjetas_debito = 5
         self.cant_tarjetas_credito = 10
