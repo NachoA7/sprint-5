@@ -1,8 +1,10 @@
 import datetime
+from moduls.Functions import Funciones
 
 class Clientes:
     def  __init__(self,nombre,apellido,numero,dni,tipo_cliente) -> None:
         
+        #Atributos importante
         self.nombre = nombre
         self.apellido = apellido
         self.numero = numero
@@ -14,6 +16,7 @@ class Clientes:
         self.fecha_actual = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         self.fecha_anterior = 0
 
+        #Atributos menos importantes
         self.cant_tarjetas_debito = 0
         self.cant_tarjetas_credito = 0
         self.cant_cajas_ahorro = 0
@@ -33,6 +36,7 @@ class Clientes:
         self.cant_chequeras = 0
         self.tarjetas = ["VISA","MasterCard","American"]
 
+        #Atributo transacciones
         self.transacciones = {
             "numero":f"{self.numero}",
             "nombre": f"{self.nombre}", 
