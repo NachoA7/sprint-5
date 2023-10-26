@@ -12,7 +12,7 @@ class Gold(Clientes):
         self.cant_retiro = 20000
         self.cant_retiro_un_pago = 150000
         self.cant_retiro_cuotas = 100000
-        self.comisiones_entrantes = 0.01
-        self.comisiones_salientes = 0.05
+        self.comisiones_entrantes = 0.1
+        self.comisiones_salientes = 0.5
         self.cant_chequeras = 1
         self.tarjetas = ["VISA","MasterCard"]
