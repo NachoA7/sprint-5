@@ -8,6 +8,10 @@ class Gold(Clientes):
         self.cant_tarjetas_debito = 1
         self.cant_tarjetas_credito = 5
         self.cant_cajas_ahorro = 2
+        self.cant_cuentas_corriente = 1
+        self.cant_cuentas_corriente_pesos = 0
+        self.cant_cuentas_corriente_dolares = 0
+        self.cant_cuentas_inversion = -1
         self.cant_retiros = -1
         self.cant_retiro = 20000
         self.cant_retiro_un_pago = 150000

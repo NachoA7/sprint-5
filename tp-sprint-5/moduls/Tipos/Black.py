@@ -14,7 +14,7 @@ class Black(Clientes):
         self.cant_cuentas_corriente_pesos = 0
         self.cant_cuentas_corriente_dolares = 0
         self.cant_cuentas_corriente_pesos = 0
-        self.cant_cuentas_inversion = 0
+        self.cant_cuentas_inversion = -1
         self.cant_retiros = -1
         self.cant_retiro = 100000
         self.cant_retiro_un_pago = 500000

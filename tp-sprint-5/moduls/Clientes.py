@@ -20,9 +20,9 @@ class Clientes:
         self.cant_cajas_ahorro_dolares = 0
         self.cant_cajas_ahorro_pesos = 0
         self.cant_cuentas_corriente = 0
-        self.cant_cuentas_corriente_pesos = 0
+        self.cant_cuentas_corriente_pesos = 0 ##
         self.cant_cuentas_corriente_dolares = 0
-        self.cant_cuentas_corriente_pesos = 0
+        self.cant_cuentas_corriente_pesos = 0 ##
         self.cant_cuentas_inversion = 0
         self.cant_retiros = 0
         self.cant_retiro = 0
@@ -104,14 +104,105 @@ class Clientes:
     def ALTA_TARJETA_DEBITO(self):
         pass 
     #Seba
-    def ALTA_CHEQUERA (self):
-        pass 
-    def ALTA_CUENTA_CTE_(self,tipo_moneda):
-        pass 
-    def ALTA_CAJA_DE_AHORRO_(tipo_moneda):
-        pass 
+    def ALTA_CHEQUERA(self):
+        #verifica cantidad de chequeras
+        if (self.cant_chequeras!=0):
+            i=0
+        else:
+            i=1
+        #aumenta el numero de transaccion
+        self.numero_transaccion+=1
+        #resultado
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "ALTA_CHEQUERA", 
+            "chequeraDisponible": self.cant_chequeras, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_chequeras -= 1
+        #fin-ALTA_CHEQUERA
+
+    def ALTA_CUENTA_CTE(self,tipo_moneda):
+        # verifica cantidad de cuentas
+        if (self.cant_cuentas_corriente!=0):
+            i=0
+        else:
+            i=1
+        #verifica tipo de moneda
+        if(tipo_moneda == 'Dolar'):
+                self.cant_cuentas_corriente_dolares += 1
+        if(tipo_moneda == 'Peso'):
+                self.cant_cuentas_corriente_pesos += 1
+        #aumenta el numero de transaccion
+        self.numero_transaccion+=1
+        #resultado
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "ALTA_CUENTA_CTE", 
+            "cuentaCorrienteDisponible": self.cant_cuentas_corriente, 
+            "cuentaCorrienteDolaresNumero": self.cant_cuentas_corriente_dolares,
+            "cuentaCorrientePesosNumero": self.cant_cuentas_corriente_pesos, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        #cantidad de cuentas resto 1 si se diola operacion
+        if(i==0):
+            self.cant_cuentas_corriente -= 1       
+        #fin-ALTA_CUENTA_CTE
+    
+    def ALTA_CAJA_DE_AHORRO_(self,tipo_moneda):
+        #verifica cantidad de cajas de ahorro
+        if (self.cant_cajas_ahorro!=0):
+            i=0
+        else:
+            i=1
+        #verifica tipo de moneda
+        if(tipo_moneda == 'Dolar'):
+                self.cant_cajas_ahorro_dolares += 1
+        if(tipo_moneda == 'Peso'):
+                self.cant_cajas_ahorro_pesos += 1
+        #aumenta el numero de transaccion
+        self.numero_transaccion+=1
+        #resultado
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "ALTA_CAJA_DE_AHORRO_", 
+            "cajaAhoroDisponible": self.cant_cajas_ahorro, 
+            "cajaAhoroDolaresNumero": self.cant_cajas_ahorro_dolares,
+            "cajaAhoroPesosNumero": self.cant_cajas_ahorro_pesos, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_cajas_ahorro -= 1
+        #fin-ALTA_CAJA_DE_AHORRO_
+
     def ALTA_CUENTA_DE_INVERSION(self):
-        pass 
+        #verifica cantidad de cajas de ahorro
+        if (self.cant_cuentas_inversion!=0):
+            i=0
+        else:
+            i=1
+        #aumenta el numero de transaccion
+        self.numero_transaccion+=1
+        #resultado
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "ALTA_CUENTA_DE_INVERSION", 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        #fin-ALTA_CAJA_DE_AHORRO_
     #Nacho
     def COMPRA_DOLAR(self):
         pass 
