@@ -184,7 +184,7 @@ class Clientes:
             self.cant_retiro_un_pago -= self.monto 
 
     def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
-        if (self.cant_tarjetas_credito>=len(self.tarjetas_credito) and self.tarjetas.__contains__(tipo_tarjeta_credito)):
+        if (self.cant_tarjetas_credito!=0 and self.tarjetas.__contains__(tipo_tarjeta_credito)):
             self.tarjetas_credito.append(
                 {
                 "numero":self.tarjetas_credito[-1]["numero"]+1,
@@ -219,7 +219,7 @@ class Clientes:
     #Para el que tenga tiempo
     
     def ALTA_TARJETA_DEBITO(self):
-        if (self.cant_tarjetas_debito>=len(self.tarjetas_debito)):
+        if (self.cant_tarjetas_debito!=0):
             self.tarjetas_debito.append(
                 {
                 "numero":self.tarjetas_debito[-1]["numero"]+1,
