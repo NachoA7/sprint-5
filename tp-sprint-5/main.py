@@ -27,5 +27,13 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # cliente1.RETIRO_EFECTIVO_POR_CAJA()
 # cliente1.COMPRA_EN_CUOTAS_TARJETA_CREDITO_("VISA")
 # cliente1.COMPRA_TARJETA_CREDITO_("VISA")
+# cliente1.ALTA_TARJETA_DEBITO()
 # print(cliente1.get_transacciones())
+# print("-------")
+# print("Tarjetas")
+# print("-------")
+# print("Credito")
+# print(cliente1.get_tarjetas_credito())
+# print("Debito")
+# print(cliente1.get_tarjetas_debito())
 

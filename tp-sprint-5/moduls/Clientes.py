@@ -75,6 +75,12 @@ class Clientes:
     def get_transacciones(self):
         return self.transacciones
     
+    def get_tarjetas_credito(self):
+        return self.tarjetas_credito[1:]
+    
+    def get_tarjetas_debito(self):
+        return self.tarjetas_debito[1:]
+    
     def RETIRO_EFECTIVO_CAJERO_AUTOMATICO (self):
         if (self.cant_retiro>self.monto):
             i=0
@@ -175,10 +181,10 @@ class Clientes:
             }
         )
         if(i==0):
-            self.cant_retiro_cuotas -= self.monto 
+            self.cant_retiro_un_pago -= self.monto 
 
     def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
-        if (self.cant_tarjetas_credito>len(self.tarjetas_credito) and self.tarjetas.__contains__(tipo_tarjeta_credito)):
+        if (self.cant_tarjetas_credito>=len(self.tarjetas_credito) and self.tarjetas.__contains__(tipo_tarjeta_credito)):
             self.tarjetas_credito.append(
                 {
                 "numero":self.tarjetas_credito[-1]["numero"]+1,
@@ -208,10 +214,40 @@ class Clientes:
             }
         )
         if(i==0):
-            self.cant_retiro_cuotas -= self.monto 
+            self.cant_tarjetas_credito -= 1 
+    
     #Para el que tenga tiempo
+    
     def ALTA_TARJETA_DEBITO(self):
-        pass 
+        if (self.cant_tarjetas_debito>=len(self.tarjetas_debito)):
+            self.tarjetas_debito.append(
+                {
+                "numero":self.tarjetas_debito[-1]["numero"]+1,
+                "apellido":self.apellido,
+                "nombre":self.nombre,
+                "monto":self.monto,
+                "clave":123
+                }
+            )
+            i=0
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i],
+            "tipo": "ALTA_TARJETA_DEBITO", 
+            "cuentaNumero": 5, 
+            "permitidoActualParaTransccion" : self.cant_tarjetas_debito, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_tarjetas_debito -= 1  
     #Seba
     def ALTA_CHEQUERA(self):
         #verifica cantidad de chequeras
