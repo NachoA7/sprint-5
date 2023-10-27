@@ -37,4 +37,11 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # print("Debito")
 # print(cliente1.get_tarjetas_debito())
 
+# cliente1.ALTA_CHEQUERA()
+# cliente1.ALTA_CUENTA_CTE("Dolares")
+# cliente1.ALTA_CAJA_DE_AHORRO_("Pesos")
+# cliente1.ALTA_CUENTA_DE_INVERSION()
+# print(cliente1.get_transacciones())
+
+
 # print(cliente1.reporte_html())
