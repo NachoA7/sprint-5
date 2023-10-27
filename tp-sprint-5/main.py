@@ -23,9 +23,9 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # cliente1.RETIRO_EFECTIVO_CAJERO_AUTOMATICO()
 # print(cliente1.get_transacciones())
 
-cliente1.ALTA_TARJETA_CREDITO_("VISA")
-cliente1.RETIRO_EFECTIVO_POR_CAJA()
-cliente1.COMPRA_EN_CUOTAS_TARJETA_CREDITO_("VISA")
-cliente1.COMPRA_TARJETA_CREDITO_("VISA")
-print(cliente1.get_transacciones())
+# cliente1.ALTA_TARJETA_CREDITO_("VISA")
+# cliente1.RETIRO_EFECTIVO_POR_CAJA()
+# cliente1.COMPRA_EN_CUOTAS_TARJETA_CREDITO_("VISA")
+# cliente1.COMPRA_TARJETA_CREDITO_("VISA")
+# print(cliente1.get_transacciones())
 
