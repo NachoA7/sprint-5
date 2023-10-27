@@ -367,12 +367,12 @@ class Clientes:
     def reporte_html(self):
         html = """<!DOCTYPE html>
         <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Reportes de transferencias</title>
-        </head>
-        <body>
-            <h1>Transferencias</h1>
+            <head>
+                <meta charset="UTF-8">
+                <title>Reportes de transferencias</title>
+            </head>
+            <body>
+                <h1>Transferencias</h1>
                 <table>
         """
 
@@ -393,4 +393,10 @@ class Clientes:
         """        
 
         print("Página HTML generada con éxito.")
+        
+        with open('informe.html', 'w', encoding='utf-8') as file:
+            file.write(html)
+
+        file.close()
+
         return html
