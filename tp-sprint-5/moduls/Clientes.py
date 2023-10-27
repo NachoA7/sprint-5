@@ -348,7 +348,9 @@ class Clientes:
             }
         )
         #fin-ALTA_CAJA_DE_AHORRO_
+
     #Nacho
+
     def COMPRA_DOLAR(self):
         pass 
     def VENTA_DOLAR(self):
@@ -357,3 +359,38 @@ class Clientes:
         pass 
     def TRANSFERENCIA_RECIBIDA_(self,tipo_moneda):
         pass
+
+    def obtener_valores_dic(self):
+        for transccion in self.transacciones:
+            print(f"{transccion}: {self.transacciones[transccion]}")
+
+    def reporte_html(self):
+        html = """<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Reportes de transferencias</title>
+        </head>
+        <body>
+            <h1>Transferencias</h1>
+                <table>
+        """
+
+        for transaccion in self.transacciones:
+            for transaccion in self.transacciones:
+                transferencia = self.transacciones[transaccion]
+                if(transferencia == []):
+                    transferencia = "NULL"
+                html+= f"""
+                    <th>{transaccion}</th>
+                        <td>{transferencia}</td>
+                    """
+
+        html+="""
+                </table>
+            </body>
+        </html>
+        """        
+
+        print("Página HTML generada con éxito.")
+        return html

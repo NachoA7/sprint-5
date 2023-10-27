@@ -37,3 +37,4 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # print("Debito")
 # print(cliente1.get_tarjetas_debito())
 
+# print(cliente1.reporte_html())
