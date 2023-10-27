@@ -349,11 +349,59 @@ class Clientes:
         )
         #fin-ALTA_CAJA_DE_AHORRO_
     #Nacho
-    def COMPRA_DOLAR(self):
-        pass 
-    def VENTA_DOLAR(self):
-        pass
-    def TRANSFERENCIA_ENVIADA_(self,tipo_moneda):
-        pass 
-    def TRANSFERENCIA_RECIBIDA_(self,tipo_moneda):
-        pass
+    def COMPRA_DOLAR(self, monto_dolares):
+        if self.cant_cajas_ahorro_pesos >= monto_dolares:
+            self.cant_cajas_ahorro_pesos -= monto_dolares * 960
+            self.cant_cajas_ahorro_dolares += monto_dolares
+            self.transacciones["transacciones"].append({
+                "tipo": "COMPRA_DOLAR",
+                "monto": monto_dolares,
+                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            })
+            return f"Compra de {monto_dolares} dólares exitosa."
+        else:
+            return "Saldo insuficiente en la cuenta en pesos para realizar la compra de dólares."
+
+    def VENTA_DOLAR(self, monto_dolares):
+        if self.cant_cajas_ahorro_dolares >= monto_dolares:
+            self.cant_cajas_ahorro_dolares -= monto_dolares
+            self.cant_cajas_ahorro_pesos += monto_dolares * 990
+            self.transacciones["transacciones"].append({
+                "tipo": "COMPRA_DOLAR",
+                "monto": monto_dolares,
+                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            })
+            return f"Venta de {monto_dolares} dólares exitosa."
+        else:
+            return "Saldo insuficiente en la cuenta en dólares para realizar la venta de dólares."
+
+    def TRANSFERENCIA_ENVIADA_(self, tipo_moneda, beneficiario, monto):
+        if tipo_moneda == "pesos":
+            if self.cant_cajas_ahorro_pesos >= monto:
+                self.cant_cajas_ahorro_pesos -= monto
+            else:
+                return "Saldo insuficiente en la cuenta en pesos para realizar la transferencia."
+        elif tipo_moneda == "dolares":
+            if self.cant_cajas_ahorro_dolares >= monto:
+                self.cant_cajas_ahorro_dolares -= monto
+            else:
+                return "Saldo insuficiente en la cuenta en dólares para realizar la transferencia."
+            
+        beneficiario.TRANSFERENCIA_RECIBIDA_(tipo_moneda, monto)
+        self.transacciones["transacciones"].append({
+                "tipo": "TRANSFERENCIA_ENVIADA",
+                "monto": monto,
+                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            })
+        return f"Transferencia de {monto} {tipo_moneda} exitosa hacia {beneficiario.nombre}."
+
+    def TRANSFERENCIA_RECIBIDA_(self, tipo_moneda, monto):
+        if tipo_moneda == "pesos":
+            self.cant_cajas_ahorro_pesos += monto
+        elif tipo_moneda == "dolares":
+            self.cant_cajas_ahorro_dolares += monto
+        self.transacciones["transacciones"].append({
+                "tipo": "TRANSFERENCIA_ENVIADA",
+                "monto": monto,
+                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            })
