@@ -34,6 +34,7 @@ class Clientes:
         self.comisiones_entrantes = 0
         self.comisiones_salientes = 0
         self.cant_chequeras = 0
+        self.numero_cuenta = 0
         self.tarjetas = ["VISA","MasterCard","American"]
 
         #Atributo transacciones
@@ -47,15 +48,15 @@ class Clientes:
             "transacciones":[
             ]}
 
-        self.tarjetas_credito = [["Número",self.apellido,self.nombre,"monto","clave"]]
-        self.tarjetas_debito = [["Número",self.apellido,self.nombre,"monto","tipo de tarjeta","clave"]]
-        self.cajas_ahorro = [["Nombre de Caja","nro","monto","moneda"]]
-        self.tarjeta = [["Número",self.apellido,self.nombre,"monto","clave"]]
+        self.tarjetas_credito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
+        self.tarjetas_debito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
+        self.cajas_ahorro = [{"nombre de Caja":"","nro":0,"monto":0,"moneda":""}]
+        self.tarjeta = [{"numero":0,"apellido":self.apellido,"nombre":self.nombre,"monto":0,"clave":123}]
         self.retiros_en_efectivo = {"Cajero 1": [0, self.cant_retiro], "Cajero 2": [0, self.cant_retiro]}
         self.comisiones = {"Salientes": self.comisiones_salientes, "Entrantes": self.comisiones_entrantes}
-        self.cuenta_corriente = [["Cuenta Corriente","Numero de cuenta corriente"]]
-        self.cuentas_de_inversion = [["Nombre de cuenta","monto"]]
-        self.chequera = [["Nro de transaccion","motivo","monto a pagar"]]
+        self.cuenta_corriente = [{"Cuenta Corriente":0,"Numero de cuenta corriente":self.numero_cuenta}]
+        self.cuentas_de_inversion = [{"Nombre de cuenta","monto"}]
+        self.chequera = [{"Nro de transaccion","motivo","monto a pagar"}]
 
 
 
@@ -95,15 +96,119 @@ class Clientes:
         )
         if(i==0):
             self.cant_retiro -= self.monto
+
     #Agus
+
     def RETIRO_EFECTIVO_POR_CAJA (self):
-        pass
+        if (self.cant_retiro>self.monto):
+            i=0
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "RETIRO_EFECTIVO_POR_CAJA", 
+            "cuentaNumero": 2, 
+            "permitidoActualParaTransccion" : self.cant_retiro , 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_retiro -= self.monto
+    
     def COMPRA_EN_CUOTAS_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
-        pass 
+        if (self.cant_retiro_cuotas>self.monto):
+            for tarjeta in self.tarjetas_credito:
+                if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
+                    if(tarjeta["monto"]>self.monto):
+                        i=0
+                    else:
+                        i=1
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i],
+            "tarjeta": tipo_tarjeta_credito, 
+            "tipo": "COMPRA_EN_CUOTAS_TARJETA_CREDITO_", 
+            "cuentaNumero": 3, 
+            "permitidoActualParaTransccion" : self.cant_retiro_cuotas, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_retiro_cuotas -= self.monto 
+
     def COMPRA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
-        pass 
+        if (self.cant_retiro_un_pago>self.monto):
+            for tarjeta in self.tarjetas_credito:
+                if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
+                    if(tarjeta["monto"]>self.monto):
+                        i=0
+                    else:
+                        i=1
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i],
+            "tarjeta": tipo_tarjeta_credito, 
+            "tipo": "COMPRA_TARJETA_CREDITO_", 
+            "cuentaNumero": 4, 
+            "permitidoActualParaTransccion" : self.cant_retiro_un_pago, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_retiro_cuotas -= self.monto 
+
     def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
-        pass
+        if (self.cant_tarjetas_credito>len(self.tarjetas_credito) and self.tarjetas.__contains__(tipo_tarjeta_credito)):
+            self.tarjetas_credito.append(
+                {
+                "numero":self.tarjetas_credito[-1]["numero"]+1,
+                "apellido":self.apellido,
+                "nombre":self.nombre,
+                "monto":self.monto,
+                "clave":123,
+                "tipo_de_tarjeta":tipo_tarjeta_credito
+                }
+            )
+            i=0
+        else:
+            i=1
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i],
+            "tarjeta": tipo_tarjeta_credito, 
+            "tipo": "ALTA_TARJETA_CREDITO_", 
+            "cuentaNumero": 4, 
+            "permitidoActualParaTransccion" : self.cant_tarjetas_credito, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(i==0):
+            self.cant_retiro_cuotas -= self.monto 
     #Para el que tenga tiempo
     def ALTA_TARJETA_DEBITO(self):
         pass 
