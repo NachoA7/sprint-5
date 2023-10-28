@@ -409,7 +409,7 @@ class Clientes:
             self.cant_cajas_ahorro_dolares -= monto_dolares
             self.cant_cajas_ahorro_pesos += monto_dolares * 990
             self.transacciones["transacciones"].append({
-                "tipo": "COMPRA_DOLAR",
+                "tipo": "VENTA_DOLAR",
                 "monto": monto_dolares,
                 "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
@@ -444,12 +444,13 @@ class Clientes:
         elif tipo_moneda == "dolares":
             self.cant_cajas_ahorro_dolares += monto
         self.transacciones["transacciones"].append({
-                "tipo": "TRANSFERENCIA_ENVIADA",
+                "tipo": "TRANSFERENCIA_RECIBIDA_",
                 "monto": monto,
                 "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
 
     def reporte_html(self):
+        i=1
         html = """<!DOCTYPE html>
         <html>
             <head>
@@ -465,14 +466,45 @@ class Clientes:
             transacciones = self.transacciones[transaccion]
             if(transacciones == []):
                 transacciones = "NULL"
-                
-            html+= f"""
-                <tr>
-                    <th>{transaccion}</th>
-                        <td>{transacciones}</td>
-                </tr>
+            if(transaccion!="transacciones"):
+                html+= f"""
+                    <tr>
+                        <th>{transaccion}</th>
+                            <td>{transacciones}</td>
+                    </tr>
+                    """
+            else:
+                html+= f"""
+                    <tr>
+                <th>{transaccion}</th> 
                 """
-
+                for transaccion1 in transacciones:
+                    html += f"""
+                                <tr>
+                                    <td>
+                                        -----transferencia: {i}------
+                                    </td>
+                                </tr> 
+                    """
+                    for transaccion2 in transaccion1:
+                        html += f"""
+                                    <td>
+                                        <tr>
+                                            <th>{transaccion2}</th>
+                                            <td>{transaccion1[transaccion2]}</td>
+                                        </tr>
+                                    </td>
+                            </tr>
+                    """    
+                    i+=1
+        html += f"""
+                                <tr>
+                                    <td>
+                                        -----------------------------
+                                    </td>
+                                </tr> 
+                    """
+                        
         html+="""
                 </table>
             </body>
