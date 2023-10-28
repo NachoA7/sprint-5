@@ -37,3 +37,21 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # print("Debito")
 # print(cliente1.get_tarjetas_debito())
 
+# cliente1.ALTA_CHEQUERA()
+# cliente1.ALTA_CUENTA_CTE("Dolares")
+# cliente1.ALTA_CAJA_DE_AHORRO_("Pesos")
+# cliente1.ALTA_CUENTA_DE_INVERSION()
+# print(cliente1.get_transacciones())
+
+# cliente1.set_monto(1000)
+# cliente1.COMPRA_DOLAR()
+# cliente1.set_monto(500)
+# cliente1.VENTA_DOLAR()
+# cliente1.set_monto(500)
+# cliente1.TRANSFERENCIA_RECIBIDA_("pesos")
+# cliente1.set_monto(100)
+# cliente1.TRANSFERENCIA_ENVIADA_("pesos")
+
+print(cliente1.get_transacciones())
+
+# print(cliente1.reporte_html())

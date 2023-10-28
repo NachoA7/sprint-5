@@ -1,5 +1,8 @@
 import datetime
 from moduls.Functions import Funciones
+import random
+
+#Creación de la clase cliente que tiene todos los atributos y métodos de los clientes 
 
 class Clientes:
     def  __init__(self,nombre,apellido,numero,dni,tipo_cliente) -> None:
@@ -15,6 +18,8 @@ class Clientes:
         self.monto = 0
         self.fecha_actual = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         self.fecha_anterior = 0
+        self.dolares = 0
+        self.pesos = 0
 
         #Atributos menos importantes
         self.cant_tarjetas_debito = 0
@@ -37,7 +42,7 @@ class Clientes:
         self.numero_cuenta = 0
         self.tarjetas = ["VISA","MasterCard","American"]
 
-        #Atributo transacciones
+        #Atributo transacciones que se utilizará luego para mostrarlo en el reporte
         self.transacciones = {
             "numero":f"{self.numero}",
             "nombre": f"{self.nombre}", 
@@ -48,6 +53,7 @@ class Clientes:
             "transacciones":[
             ]}
 
+        #Atributos de la clase Clientes del tipo listas
         self.tarjetas_credito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
         self.tarjetas_debito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
         self.cajas_ahorro = [{"nombre de Caja":"","nro":0,"monto":0,"moneda":""}]
@@ -57,31 +63,35 @@ class Clientes:
         self.cuenta_corriente = [{"Cuenta Corriente":0,"Numero de cuenta corriente":self.numero_cuenta}]
         self.cuentas_de_inversion = [{"Nombre de cuenta","monto"}]
         self.chequera = [{"Nro de transaccion","motivo","monto a pagar"}]
+       
+    #Métodos para obtener datos
 
-
-
-    def agregarCaja(self,monto,moneda):
-        moneda = moneda.title()
-        if(len(self.cajas_ahorro)<=self.cant_cajas_ahorro and (moneda=="Pesos" or moneda=="Dolares")):
-            self.cajas_ahorro.append([f"Caja de ahorro {len(self.cajas_ahorro)} en {moneda}",len(self.cajas_ahorro),monto,moneda])
-
-    def eliminarCaja(self,nroCaja):
-        if(len(self.cajas_ahorro)>0 and 0<nroCaja and nroCaja<=len(self.cajas_ahorro)):
-            self.cajas_ahorro.pop(nroCaja)
-        
+    #Retorna una lista que contiene en cada nodo un diccionario con la información de las cajas de ahorro
     def get_cajas(self):
         return self.cajas_ahorro
     
+    #Retorna una lista que contiene en cada nodo un diccionario con la información de las transacciones realizadas
     def get_transacciones(self):
         return self.transacciones
     
+    #Retorna una lista que contiene en cada nodo un diccionario con la información de las tarjetas de credito 
     def get_tarjetas_credito(self):
         return self.tarjetas_credito[1:]
     
+    #Retorna una lista que contiene en cada nodo un diccionario con la información de las tarjetas de débito
     def get_tarjetas_debito(self):
         return self.tarjetas_debito[1:]
     
+    def set_monto(self,monto):
+        self.monto=monto
+    
+
+    #Procedimiento que en el caso de querer retirar un monto menor a la cantidad permitida deja el estado de la transacción 
+    #como aprobada y rechada de ser el caso contrario. agrega un diccionario dentro del diccionario que esta dentro del atributo 
+    #transacciones que contiene una key llamada transacciones, la cual es una lista. En la misma appendeamos el diccionario.
+
     def RETIRO_EFECTIVO_CAJERO_AUTOMATICO (self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro>self.monto):
             i=0
         else:
@@ -102,10 +112,17 @@ class Clientes:
         )
         if(i==0):
             self.cant_retiro -= self.monto
+        
+        self.monto=0
 
     #Agus
 
+    #Procedimiento que en el caso de querer retirar un monto menor a la cantidad permitida deja el estado de la transacción 
+    #como aprobada y rechada de ser el caso contrario. agrega un diccionario dentro del diccionario que esta dentro del atributo 
+    #transacciones que contiene una key llamada transacciones, la cual es una lista. En la misma appendeamos el diccionario.
+    
     def RETIRO_EFECTIVO_POR_CAJA (self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro>self.monto):
             i=0
         else:
@@ -126,8 +143,11 @@ class Clientes:
         )
         if(i==0):
             self.cant_retiro -= self.monto
+
+        self.monto=0
     
     def COMPRA_EN_CUOTAS_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_cuotas>self.monto):
             for tarjeta in self.tarjetas_credito:
                 if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
@@ -153,9 +173,12 @@ class Clientes:
             }
         )
         if(i==0):
-            self.cant_retiro_cuotas -= self.monto 
+            self.cant_retiro_cuotas -= self.monto
+        
+        self.monto=0 
 
     def COMPRA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_un_pago>self.monto):
             for tarjeta in self.tarjetas_credito:
                 if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
@@ -181,17 +204,20 @@ class Clientes:
             }
         )
         if(i==0):
-            self.cant_retiro_un_pago -= self.monto 
+            self.cant_retiro_un_pago -= self.monto
+
+        self.monto=0 
 
     def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
         if (self.cant_tarjetas_credito!=0 and self.tarjetas.__contains__(tipo_tarjeta_credito)):
             self.tarjetas_credito.append(
                 {
                 "numero":self.tarjetas_credito[-1]["numero"]+1,
+                "numero_tarjeta":random.randint(100000000000,999999999999),
                 "apellido":self.apellido,
                 "nombre":self.nombre,
                 "monto":self.monto,
-                "clave":123,
+                "clave":random.randint(100,999),
                 "tipo_de_tarjeta":tipo_tarjeta_credito
                 }
             )
@@ -215,6 +241,8 @@ class Clientes:
         )
         if(i==0):
             self.cant_tarjetas_credito -= 1 
+        
+        self.monto=0
     
     #Para el que tenga tiempo
     
@@ -223,10 +251,11 @@ class Clientes:
             self.tarjetas_debito.append(
                 {
                 "numero":self.tarjetas_debito[-1]["numero"]+1,
+                "numero_tarjeta":random.randint(100000000000,999999999999),
                 "apellido":self.apellido,
                 "nombre":self.nombre,
                 "monto":self.monto,
-                "clave":123
+                "clave":random.randint(100,999)
                 }
             )
             i=0
@@ -247,7 +276,10 @@ class Clientes:
             }
         )
         if(i==0):
-            self.cant_tarjetas_debito -= 1  
+            self.cant_tarjetas_debito -= 1
+
+        self.monto=0
+
     #Seba
     def ALTA_CHEQUERA(self):
         #verifica cantidad de chequeras
@@ -269,7 +301,9 @@ class Clientes:
         )
         if(i==0):
             self.cant_chequeras -= 1
-        #fin-ALTA_CHEQUERA
+
+        self.monto=0
+        #fin-ALTA_CHEQUERA        
 
     def ALTA_CUENTA_CTE(self,tipo_moneda):
         # verifica cantidad de cuentas
@@ -298,7 +332,9 @@ class Clientes:
         )
         #cantidad de cuentas resto 1 si se diola operacion
         if(i==0):
-            self.cant_cuentas_corriente -= 1       
+            self.cant_cuentas_corriente -= 1 
+
+        self.monto=0      
         #fin-ALTA_CUENTA_CTE
     
     def ALTA_CAJA_DE_AHORRO_(self,tipo_moneda):
@@ -328,6 +364,8 @@ class Clientes:
         )
         if(i==0):
             self.cant_cajas_ahorro -= 1
+
+        self.monto=0
         #fin-ALTA_CAJA_DE_AHORRO_
 
     def ALTA_CUENTA_DE_INVERSION(self):
@@ -347,7 +385,10 @@ class Clientes:
             "numero": self.numero_transaccion
             }
         )
+
+        self.monto=0
         #fin-ALTA_CAJA_DE_AHORRO_
+
     #Nacho
     def COMPRA_DOLAR(self, monto_dolares):
         if self.cant_cajas_ahorro_pesos >= monto_dolares:
@@ -405,3 +446,148 @@ class Clientes:
                 "monto": monto,
                 "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
+
+    def COMPRA_DOLAR(self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_entrantes)
+
+        self.numero_transaccion+=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[0], 
+            "tipo": "COMPRA_DOLAR", 
+            "cuentaNumero": 6, 
+            "dolares_actuales" : self.dolares, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        self.dolares += self.monto
+
+        self.monto=0
+
+    def VENTA_DOLAR(self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
+
+        self.numero_transaccion+=1
+
+        if(self.dolares>self.monto):
+            self.pesos=Funciones.calcular_monto_total(self.monto)
+            i=0
+        else:
+            i=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "VENTA_DOLAR", 
+            "cuentaNumero": 7, 
+            "dolares_actuales" : self.dolares, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        self.dolares -= self.monto
+
+        self.monto=0
+
+    def TRANSFERENCIA_ENVIADA_(self,tipo_moneda):
+        self.monto = Funciones.descontar_comision(self.monto,self.comisiones_salientes)
+
+        self.numero_transaccion+=1
+
+        if(tipo_moneda.lower().__contains__("peso")):
+            if(self.pesos>self.monto):
+                i=0
+            else:
+                i=1
+        elif(tipo_moneda.lower().__contains__("dolar")):
+            self.monto = Funciones.calcular_monto_total(self.monto)
+            if(self.dolares>self.monto):
+                i=0
+            else:
+                i=1
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[i], 
+            "tipo": "TRANSFERENCIA_ENVIADA_", 
+            "cuentaNumero": 8, 
+            "dolares_actuales" : self.dolares,
+            "pesos_acutales" : self.pesos, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+        if(tipo_moneda.lower().__contains__("peso") and i==0):
+            self.pesos-=self.monto
+        if(tipo_moneda.lower().__contains__("dolar") and i==0):
+            self.dolares-=self.monto
+
+        self.monto=0
+
+    def TRANSFERENCIA_RECIBIDA_(self,tipo_moneda):
+        self.monto = Funciones.descontar_comision(self.monto,self.comisiones_entrantes)
+
+        self.numero_transaccion+=1
+
+        if(tipo_moneda.lower().__contains__("dolar")):
+            self.monto = Funciones.calcular_monto_total(self.monto)
+
+        self.transacciones["transacciones"].append(
+            {
+            "estado": self.estado[0], 
+            "tipo": "TRANSFERENCIA_RECIBIDA_", 
+            "cuentaNumero": 9, 
+            "dolares_actuales" : self.dolares,
+            "pesos_acutales" : self.pesos, 
+            "monto": self.monto, 
+            "fecha": self.fecha_actual, 
+            "numero": self.numero_transaccion
+            }
+        )
+
+        if(tipo_moneda.lower().__contains__("peso")):
+            self.pesos+=self.monto
+        if(tipo_moneda.lower().__contains__("dolar")):
+            self.dolares+=self.monto
+
+    def reporte_html(self):
+        html = """<!DOCTYPE html>
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Reportes de transferencias</title>
+            </head>
+            <body>
+                <h1>Transferencias</h1>
+                <table>
+        """
+
+        for transaccion in self.transacciones:
+            for transaccion in self.transacciones:
+                transferencia = self.transacciones[transaccion]
+                if(transferencia == []):
+                    transferencia = "NULL"
+                html+= f"""
+                    <th>{transaccion}</th>
+                        <td>{transferencia}</td>
+                    """
+
+        html+="""
+                </table>
+            </body>
+        </html>
+        """        
+
+        print("Página HTML generada con éxito.")
+        
+        with open('informe.html', 'w', encoding='utf-8') as file:
+            file.write(html)
+
+        file.close()
+
+        return html
