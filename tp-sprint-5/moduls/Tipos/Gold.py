@@ -5,6 +5,7 @@ class Gold(Clientes):
     def __init__(self,nombre,apellido,numero,dni,tipo_cliente, caja_ahorro_dolares = False) -> None:
         super().__init__(nombre,apellido,numero,dni,tipo_cliente)
         
+        #Atributos de clientes Gold
         self.cant_tarjetas_debito = 1
         self.cant_tarjetas_credito = 5
         self.cant_cajas_ahorro = 2

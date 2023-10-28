@@ -5,6 +5,7 @@ class Black(Clientes):
     def __init__(self,nombre,apellido,numero,dni,tipo_cliente,caja_ahorro_dolares = False) -> None:
         super().__init__(nombre,apellido,tipo_cliente,numero,dni)
 
+        #Atributos de clientes black
         self.cant_tarjetas_debito = 5
         self.cant_tarjetas_credito = 10
         self.cant_cajas_ahorro = 5

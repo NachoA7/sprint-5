@@ -55,7 +55,7 @@ class Clientes:
 
         #Atributos de la clase Clientes del tipo listas
         self.tarjetas_credito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
-        self.tarjetas_debito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
+        self.tarjetas_debito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123}]
         self.cajas_ahorro = [{"nombre de Caja":"","nro":0,"monto":0,"moneda":""}]
         self.tarjeta = [{"numero":0,"apellido":self.apellido,"nombre":self.nombre,"monto":0,"clave":123}]
         self.retiros_en_efectivo = {"Cajero 1": [0, self.cant_retiro], "Cajero 2": [0, self.cant_retiro]}
@@ -82,6 +82,7 @@ class Clientes:
     def get_tarjetas_debito(self):
         return self.tarjetas_debito[1:]
     
+    #Funcion que setea el monto con el que realizará operaciones el cliente
     def set_monto(self,monto):
         self.monto=monto
     
@@ -115,8 +116,6 @@ class Clientes:
         
         self.monto=0
 
-    #Agus
-
     #Procedimiento que en el caso de querer retirar un monto menor a la cantidad permitida deja el estado de la transacción 
     #como aprobada y rechada de ser el caso contrario. agrega un diccionario dentro del diccionario que esta dentro del atributo 
     #transacciones que contiene una key llamada transacciones, la cual es una lista. En la misma appendeamos el diccionario.
@@ -146,6 +145,10 @@ class Clientes:
 
         self.monto=0
     
+    #Procedimiento que en el caso de que la cantidad que se quiera retirar sea mayor a la cantidad permitida,
+    #crea un diccionario con el 'estado' rechazado y aprobado en caso contrario, y este diccionario se le agrega
+    #a el atributo de transacciones, el cual es una lista
+
     def COMPRA_EN_CUOTAS_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
         self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_cuotas>self.monto):
@@ -177,6 +180,11 @@ class Clientes:
         
         self.monto=0 
 
+    #Procedimiento que realiza compras con tarjeta de credito en un pago, se recibe por parametro el tipo de tarjeta
+    #y se verifica que el monto con el que se realizará la operación sea menor o igual a la cantidad permitida y también 
+    #se verifica que la tarjeta este dentro de las tarjetas validas para el tipo de cliente que solicita realizar el pago,
+    # y obviamente, que el usuario haya dado de alta una tarjeta de ese tipo.
+
     def COMPRA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
         self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_un_pago>self.monto):
@@ -207,6 +215,11 @@ class Clientes:
             self.cant_retiro_un_pago -= self.monto
 
         self.monto=0 
+
+    #procedimiento que recibe por parametro el tipo de tarjeta de credito y si la misma coincide con las
+    # que son permitidas y la cantidad de tarjetas de credito disponibles es distinto de 0
+    # , inserta un diccionario en la lista de tarjetas de credito del usuario y marca la transaccion como 
+    # aprobada.
 
     def ALTA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
         if (self.cant_tarjetas_credito!=0 and self.tarjetas.__contains__(tipo_tarjeta_credito)):
@@ -243,8 +256,10 @@ class Clientes:
             self.cant_tarjetas_credito -= 1 
         
         self.monto=0
-    
-    #Para el que tenga tiempo
+
+    #Procedimiento que da de alta una tarjeta de debito y lo hace si la cantidad de tarjetas de débito disponibles es
+    # distinta de 0, si puede realizar la operacion, se marca como aprobada y se inserta un diccionario con los datos
+    # de la tarjeta en la lista de las tarjetas de debito del cliente 
     
     def ALTA_TARJETA_DEBITO(self):
         if (self.cant_tarjetas_debito!=0):
@@ -280,7 +295,6 @@ class Clientes:
 
         self.monto=0
 
-    #Seba
     def ALTA_CHEQUERA(self):
         #verifica cantidad de chequeras
         if (self.cant_chequeras!=0):
@@ -389,7 +403,6 @@ class Clientes:
         self.monto=0
         #fin-ALTA_CAJA_DE_AHORRO_
 
-    #Nacho
     def COMPRA_DOLAR(self, monto_dolares):
         cambio_dolar = Funciones.calcular_monto_total(monto_dolares)
         if self.cant_cajas_ahorro_pesos >= cambio_dolar:
@@ -448,8 +461,12 @@ class Clientes:
                 "monto": monto,
                 "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
+        
+    #Funcion que recibe por parametro si el usuario desea crear un archivo HTML y retornarlo como string,
+    #  o solo desea que se retorne el mismo, se encarga de realizar un reporte de las transacciones realizadas y 
+    # arma una tabla con las mismas.
 
-    def reporte_html(self):
+    def reporte_html(self,crear_archivo):
         i=1
         html = """<!DOCTYPE html>
         <html>
@@ -511,11 +528,13 @@ class Clientes:
         </html>
         """        
 
+        
+        if(crear_archivo):
+            with open('informe.html', 'w', encoding='utf-8') as file:
+                file.write(html)
+            
+            file.close()
+
         print("Página HTML generada con éxito.")
         
-        with open('informe.html', 'w', encoding='utf-8') as file:
-            file.write(html)
-
-        file.close()
-
         return html
