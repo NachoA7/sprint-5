@@ -4,6 +4,7 @@ from moduls.Tipos.Gold import Gold
 from moduls.Tipos.Black import Black
 
 cliente1 = Clientes("Agustin","Corro Molas",100000,42932897,"Gold")
+cliente2 = Clientes("Joaco","Corro Molas",1000001,12345678,"black")
 
 if(cliente1.tipo_cliente=='classic'):
     cliente1 = Classic(cliente1.nombre,cliente1.apellido,cliente1.numero,cliente1.dni,cliente1.tipo_cliente,False)
@@ -43,15 +44,12 @@ elif(cliente1.tipo_cliente.lower()=='black'):
 # cliente1.ALTA_CUENTA_DE_INVERSION()
 # print(cliente1.get_transacciones())
 
-# cliente1.set_monto(1000)
-# cliente1.COMPRA_DOLAR()
-# cliente1.set_monto(500)
-# cliente1.VENTA_DOLAR()
-# cliente1.set_monto(500)
-# cliente1.TRANSFERENCIA_RECIBIDA_("pesos")
-# cliente1.set_monto(100)
-# cliente1.TRANSFERENCIA_ENVIADA_("pesos")
+
+cliente1.COMPRA_DOLAR(100)
+cliente1.VENTA_DOLAR(50)
+cliente1.TRANSFERENCIA_RECIBIDA_("pesos",100)
+cliente1.TRANSFERENCIA_ENVIADA_("pesos",cliente2,50)
 
 print(cliente1.get_transacciones())
 
-# print(cliente1.reporte_html())
+print(cliente1.reporte_html())

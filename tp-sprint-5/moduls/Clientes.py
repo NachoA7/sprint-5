@@ -433,7 +433,8 @@ class Clientes:
         self.transacciones["transacciones"].append({
                 "tipo": "TRANSFERENCIA_ENVIADA",
                 "monto": monto,
-                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "destinatario": f"{beneficiario.apellido} {beneficiario.nombre}" 
             })
         return f"Transferencia de {monto} {tipo_moneda} exitosa hacia {beneficiario.nombre}."
 
@@ -448,114 +449,6 @@ class Clientes:
                 "fecha": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
 
-    def COMPRA_DOLAR(self):
-        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_entrantes)
-
-        self.numero_transaccion+=1
-
-        self.transacciones["transacciones"].append(
-            {
-            "estado": self.estado[0], 
-            "tipo": "COMPRA_DOLAR", 
-            "cuentaNumero": 6, 
-            "dolares_actuales" : self.dolares, 
-            "monto": self.monto, 
-            "fecha": self.fecha_actual, 
-            "numero": self.numero_transaccion
-            }
-        )
-        self.dolares += self.monto
-
-        self.monto=0
-
-    def VENTA_DOLAR(self):
-        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
-
-        self.numero_transaccion+=1
-
-        if(self.dolares>self.monto):
-            self.pesos=Funciones.calcular_monto_total(self.monto)
-            i=0
-        else:
-            i=1
-
-        self.transacciones["transacciones"].append(
-            {
-            "estado": self.estado[i], 
-            "tipo": "VENTA_DOLAR", 
-            "cuentaNumero": 7, 
-            "dolares_actuales" : self.dolares, 
-            "monto": self.monto, 
-            "fecha": self.fecha_actual, 
-            "numero": self.numero_transaccion
-            }
-        )
-        self.dolares -= self.monto
-
-        self.monto=0
-
-    def TRANSFERENCIA_ENVIADA_(self,tipo_moneda):
-        self.monto = Funciones.descontar_comision(self.monto,self.comisiones_salientes)
-
-        self.numero_transaccion+=1
-
-        if(tipo_moneda.lower().__contains__("peso")):
-            if(self.pesos>self.monto):
-                i=0
-            else:
-                i=1
-        elif(tipo_moneda.lower().__contains__("dolar")):
-            self.monto = Funciones.calcular_monto_total(self.monto)
-            if(self.dolares>self.monto):
-                i=0
-            else:
-                i=1
-
-        self.transacciones["transacciones"].append(
-            {
-            "estado": self.estado[i], 
-            "tipo": "TRANSFERENCIA_ENVIADA_", 
-            "cuentaNumero": 8, 
-            "dolares_actuales" : self.dolares,
-            "pesos_acutales" : self.pesos, 
-            "monto": self.monto, 
-            "fecha": self.fecha_actual, 
-            "numero": self.numero_transaccion
-            }
-        )
-        if(tipo_moneda.lower().__contains__("peso") and i==0):
-            self.pesos-=self.monto
-        if(tipo_moneda.lower().__contains__("dolar") and i==0):
-            self.dolares-=self.monto
-
-        self.monto=0
-
-    def TRANSFERENCIA_RECIBIDA_(self,tipo_moneda):
-        self.monto = Funciones.descontar_comision(self.monto,self.comisiones_entrantes)
-
-        self.numero_transaccion+=1
-
-        if(tipo_moneda.lower().__contains__("dolar")):
-            self.monto = Funciones.calcular_monto_total(self.monto)
-
-        self.transacciones["transacciones"].append(
-            {
-            "estado": self.estado[0], 
-            "tipo": "TRANSFERENCIA_RECIBIDA_", 
-            "cuentaNumero": 9, 
-            "dolares_actuales" : self.dolares,
-            "pesos_acutales" : self.pesos, 
-            "monto": self.monto, 
-            "fecha": self.fecha_actual, 
-            "numero": self.numero_transaccion
-            }
-        )
-
-        if(tipo_moneda.lower().__contains__("peso")):
-            self.pesos+=self.monto
-        if(tipo_moneda.lower().__contains__("dolar")):
-            self.dolares+=self.monto
-
     def reporte_html(self):
         html = """<!DOCTYPE html>
         <html>
@@ -569,14 +462,16 @@ class Clientes:
         """
 
         for transaccion in self.transacciones:
-            for transaccion in self.transacciones:
-                transferencia = self.transacciones[transaccion]
-                if(transferencia == []):
-                    transferencia = "NULL"
-                html+= f"""
+            transacciones = self.transacciones[transaccion]
+            if(transacciones == []):
+                transacciones = "NULL"
+                
+            html+= f"""
+                <tr>
                     <th>{transaccion}</th>
-                        <td>{transferencia}</td>
-                    """
+                        <td>{transacciones}</td>
+                </tr>
+                """
 
         html+="""
                 </table>
