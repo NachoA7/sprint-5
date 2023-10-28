@@ -1,5 +1,6 @@
 import datetime
 from moduls.Functions import Funciones
+import random
 
 class Clientes:
     def  __init__(self,nombre,apellido,numero,dni,tipo_cliente) -> None:
@@ -82,6 +83,7 @@ class Clientes:
         return self.tarjetas_debito[1:]
     
     def RETIRO_EFECTIVO_CAJERO_AUTOMATICO (self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro>self.monto):
             i=0
         else:
@@ -106,6 +108,7 @@ class Clientes:
     #Agus
 
     def RETIRO_EFECTIVO_POR_CAJA (self):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro>self.monto):
             i=0
         else:
@@ -128,6 +131,7 @@ class Clientes:
             self.cant_retiro -= self.monto
     
     def COMPRA_EN_CUOTAS_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_cuotas>self.monto):
             for tarjeta in self.tarjetas_credito:
                 if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
@@ -156,6 +160,7 @@ class Clientes:
             self.cant_retiro_cuotas -= self.monto 
 
     def COMPRA_TARJETA_CREDITO_(self,tipo_tarjeta_credito):
+        self.monto=Funciones.descontar_comision(self.monto,self.comisiones_salientes)
         if (self.cant_retiro_un_pago>self.monto):
             for tarjeta in self.tarjetas_credito:
                 if(tarjeta["tipo_de_tarjeta"]==tipo_tarjeta_credito):
@@ -188,10 +193,11 @@ class Clientes:
             self.tarjetas_credito.append(
                 {
                 "numero":self.tarjetas_credito[-1]["numero"]+1,
+                "numero_tarjeta":random.randint(100000000000,999999999999),
                 "apellido":self.apellido,
                 "nombre":self.nombre,
                 "monto":self.monto,
-                "clave":123,
+                "clave":random.randint(100,999),
                 "tipo_de_tarjeta":tipo_tarjeta_credito
                 }
             )
@@ -223,10 +229,11 @@ class Clientes:
             self.tarjetas_debito.append(
                 {
                 "numero":self.tarjetas_debito[-1]["numero"]+1,
+                "numero_tarjeta":random.randint(100000000000,999999999999),
                 "apellido":self.apellido,
                 "nombre":self.nombre,
                 "monto":self.monto,
-                "clave":123
+                "clave":random.randint(100,999)
                 }
             )
             i=0
