@@ -56,13 +56,13 @@ class Clientes:
         #Atributos de la clase Clientes del tipo listas
         self.tarjetas_credito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
         self.tarjetas_debito = [{"numero":0,"apellido": self.apellido,"nombre":self.nombre,"monto":0,"clave":123,"tipo_de_tarjeta":""}]
-        self.cajas_ahorro = [{"nombre de Caja":"","nro":0,"monto":0,"moneda":""}]
+        self.cajas_ahorro = [{"nombre de Caja","nro","monto","moneda"}]
         self.tarjeta = [{"numero":0,"apellido":self.apellido,"nombre":self.nombre,"monto":0,"clave":123}]
         self.retiros_en_efectivo = {"Cajero 1": [0, self.cant_retiro], "Cajero 2": [0, self.cant_retiro]}
         self.comisiones = {"Salientes": self.comisiones_salientes, "Entrantes": self.comisiones_entrantes}
-        self.cuenta_corriente = [{"Cuenta Corriente":0,"Numero de cuenta corriente":self.numero_cuenta}]
+        self.cuenta_corriente = [{"Cuenta Corriente","Numero de cuenta corriente","Moneda","apellido","nombre"}]
         self.cuentas_de_inversion = [{"Nombre de cuenta","monto"}]
-        self.chequera = [{"Nro de transaccion","motivo","monto a pagar"}]
+        self.chequera = [{"Nro de transaccion","motivo","apellido","nombre","monto a pagar"}]
        
     #Métodos para obtener datos
 
@@ -281,19 +281,32 @@ class Clientes:
         self.monto=0
 
     #Seba
-    def ALTA_CHEQUERA(self):
-        #verifica cantidad de chequeras
+    def ALTA_CHEQUERA(self,monto_cheque):
+        
+        # #aumenta el numero de transaccion
+        self.numero_transaccion+=1  
+        #verifica cantidad de chequeras, si tiene disponible crea una
         if (self.cant_chequeras!=0):
             i=0
+            self.chequera.append(
+                {
+                "Nro de transaccion":self.numero,
+                "motivo": "Pago",
+                "apellido":self.apellido,
+                "nombre":self.nombre,
+                "monto":monto_cheque,
+                
+                }
+            )
         else:
             i=1
-        #aumenta el numero de transaccion
-        self.numero_transaccion+=1
+        
         #resultado
         self.transacciones["transacciones"].append(
             {
             "estado": self.estado[i], 
             "tipo": "ALTA_CHEQUERA", 
+            "chequera": self.chequera,
             "chequeraDisponible": self.cant_chequeras, 
             "fecha": self.fecha_actual, 
             "numero": self.numero_transaccion
@@ -306,23 +319,36 @@ class Clientes:
         #fin-ALTA_CHEQUERA        
 
     def ALTA_CUENTA_CTE(self,tipo_moneda):
-        # verifica cantidad de cuentas
-        if (self.cant_cuentas_corriente!=0):
-            i=0
-        else:
-            i=1
-        #verifica tipo de moneda
-        if(tipo_moneda == 'Dolar'):
-                self.cant_cuentas_corriente_dolares += 1
-        if(tipo_moneda == 'Peso'):
-                self.cant_cuentas_corriente_pesos += 1
         #aumenta el numero de transaccion
         self.numero_transaccion+=1
+
+        # verifica cantidad de cuenta, si tiene disponible crea una
+        if (self.cant_cuentas_corriente!=0):
+            i=0
+            #verifica tipo de moneda
+            if(tipo_moneda == 'Dolar'):
+                self.cant_cuentas_corriente_dolares += 1
+            if(tipo_moneda == 'Peso'):
+                self.cant_cuentas_corriente_pesos += 1
+            #creacion de cuenta corriente
+            self.cuenta_corriente.append(
+                {
+                "Cuenta Corriente":self.cant_cuentas_corriente,
+                "Numero de cuenta corriente": self.numero_cuenta,
+                "Moneda": tipo_moneda,
+                "apellido":self.apellido,
+                "nombre":self.nombre 
+                }
+            )
+        else:
+            i=1
+
         #resultado
         self.transacciones["transacciones"].append(
             {
             "estado": self.estado[i], 
             "tipo": "ALTA_CUENTA_CTE", 
+            "cuentaCorriente": self.cuenta_corriente,
             "cuentaCorrienteDisponible": self.cant_cuentas_corriente, 
             "cuentaCorrienteDolaresNumero": self.cant_cuentas_corriente_dolares,
             "cuentaCorrientePesosNumero": self.cant_cuentas_corriente_pesos, 
@@ -337,24 +363,35 @@ class Clientes:
         self.monto=0      
         #fin-ALTA_CUENTA_CTE
     
-    def ALTA_CAJA_DE_AHORRO_(self,tipo_moneda):
-        #verifica cantidad de cajas de ahorro
-        if (self.cant_cajas_ahorro!=0):
-            i=0
-        else:
-            i=1
-        #verifica tipo de moneda
-        if(tipo_moneda == 'Dolar'):
-                self.cant_cajas_ahorro_dolares += 1
-        if(tipo_moneda == 'Peso'):
-                self.cant_cajas_ahorro_pesos += 1
+    def ALTA_CAJA_DE_AHORRO_(self,nombre_caja,tipo_moneda,monto_caja):
         #aumenta el numero de transaccion
         self.numero_transaccion+=1
+        #verifica cantidad de cajas de ahorro, si tiene disponible crea una
+        if (self.cant_cajas_ahorro!=0):
+            i=0
+            #verifica tipo de moneda
+            if(tipo_moneda == 'Dolar'):
+                self.cant_cajas_ahorro_dolares += 1
+            if(tipo_moneda == 'Peso'):
+                self.cant_cajas_ahorro_pesos += 1
+            #crea la caja de ahorro 
+            self.cajas_ahorro.append(
+                {
+                "nombre de Caja":nombre_caja,
+                "nro": self.cant_cajas_ahorro,
+                "monto": monto_caja,
+                "moneda":tipo_moneda
+                }
+            )
+        else:
+            i=1
+        
         #resultado
         self.transacciones["transacciones"].append(
             {
             "estado": self.estado[i], 
-            "tipo": "ALTA_CAJA_DE_AHORRO_", 
+            "tipo": "ALTA_CAJA_DE_AHORRO_",
+            "cajaAhoro":self.cajas_ahorro, 
             "cajaAhoroDisponible": self.cant_cajas_ahorro, 
             "cajaAhoroDolaresNumero": self.cant_cajas_ahorro_dolares,
             "cajaAhoroPesosNumero": self.cant_cajas_ahorro_pesos, 
@@ -368,19 +405,27 @@ class Clientes:
         self.monto=0
         #fin-ALTA_CAJA_DE_AHORRO_
 
-    def ALTA_CUENTA_DE_INVERSION(self):
-        #verifica cantidad de cajas de ahorro
-        if (self.cant_cuentas_inversion!=0):
-            i=0
-        else:
-            i=1
+    def ALTA_CUENTA_DE_INVERSION(self,monto_invertir,nombre_cuenta):
         #aumenta el numero de transaccion
         self.numero_transaccion+=1
+        #verifica cantidad de cajas de ahorro, si tiene disponible crea uno
+        if (self.cant_cuentas_inversion!=0):
+            i=0
+             #crea cuenta inversion
+            self.cuentas_de_inversion.append(
+                {
+                "Nombre de cuenta":nombre_cuenta,
+                "monto": monto_invertir,
+                }
+            )
+        else:
+            i=1
         #resultado
         self.transacciones["transacciones"].append(
             {
             "estado": self.estado[i], 
             "tipo": "ALTA_CUENTA_DE_INVERSION", 
+            "cuentaInvercsion":self.cuentas_de_inversion,
             "fecha": self.fecha_actual, 
             "numero": self.numero_transaccion
             }
@@ -454,12 +499,19 @@ class Clientes:
         html = """<!DOCTYPE html>
         <html>
             <head>
+                <html lang="es">
                 <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+                
                 <title>Reportes de transferencias</title>
             </head>
             <body>
-                <h1>Transferencias</h1>
-                <table>
+                <header>
+                        <h1 class="text-light bg-dark" >Transferencias</h1>
+                </header>
+                <main>
+                    <table class="table table-hover table-bordered table-striped table-responsive">
         """
 
         for transaccion in self.transacciones:
@@ -475,38 +527,16 @@ class Clientes:
                     """
             else:
                 html+= f"""
-                    <tr>
-                <th>{transaccion}</th> 
-                """
-                for transaccion1 in transacciones:
-                    html += f"""
-                                <tr>
-                                    <td>
-                                        -----transferencia: {i}------
-                                    </td>
-                                </tr> 
+                    <th>{transaccion}</th>
+                        <td>{transferencia}</td>
                     """
-                    for transaccion2 in transaccion1:
-                        html += f"""
-                                    <td>
-                                        <tr>
-                                            <th>{transaccion2}</th>
-                                            <td>{transaccion1[transaccion2]}</td>
-                                        </tr>
-                                    </td>
-                            </tr>
-                    """    
-                    i+=1
-        html += f"""
-                                <tr>
-                                    <td>
-                                        -----------------------------
-                                    </td>
-                                </tr> 
-                    """
-                        
+
         html+="""
-                </table>
+                    </table>
+                </main>
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
             </body>
         </html>
         """        
