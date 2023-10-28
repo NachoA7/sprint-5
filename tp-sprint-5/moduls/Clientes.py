@@ -391,8 +391,9 @@ class Clientes:
 
     #Nacho
     def COMPRA_DOLAR(self, monto_dolares):
-        if self.cant_cajas_ahorro_pesos >= monto_dolares:
-            self.cant_cajas_ahorro_pesos -= monto_dolares * 960
+        cambio_dolar = Funciones.calcular_monto_total(monto_dolares)
+        if self.cant_cajas_ahorro_pesos >= cambio_dolar:
+            self.cant_cajas_ahorro_pesos -= cambio_dolar
             self.cant_cajas_ahorro_dolares += monto_dolares
             self.transacciones["transacciones"].append({
                 "tipo": "COMPRA_DOLAR",
